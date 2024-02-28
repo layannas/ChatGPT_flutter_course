@@ -4,7 +4,7 @@ class TextWidget extends StatelessWidget {
   const TextWidget(
       {Key? key,
       required this.label,
-      this.fontSize = 18,
+      this.fontSize = 30,
       this.color,
       this.fontWeight})
       : super(key: key);
@@ -19,7 +19,7 @@ class TextWidget extends StatelessWidget {
       label,
       // textAlign: TextAlign.justify,
       style: TextStyle(
-        color: color ?? Colors.white,
+        color: color ?? const Color.fromARGB(255, 0, 0, 0),
         fontSize: fontSize,
         fontWeight: fontWeight ?? FontWeight.w500,
       ),

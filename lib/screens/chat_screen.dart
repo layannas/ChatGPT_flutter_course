@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../providers/models_provider.dart';
 import '../services/assets_manager.dart';
 import '../widgets/text_widget.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -48,19 +49,33 @@ class _ChatScreenState extends State<ChatScreen> {
     final chatProvider = Provider.of<ChatProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        elevation: 2,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(AssetsManager.openaiLogo),
+        elevation: 4,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Handle the button press or navigate back
+          },
         ),
-        title: const Text("ChatGPT"),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await Services.showModalSheet(context: context);
-            },
-            icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
+        title: Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            "معلم البايثون",
+            style: TextStyle(fontSize: 30), // Set the desired font size
           ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Transform.scale(
+              scale: 3, // Set the desired scale value
+            ),
+          ),
+          /* IconButton(
+        onPressed: () async {
+          await Services.showModalSheet(context: context);
+        },
+        icon: Icon(Icons.more_vert_rounded, color: Colors.white),
+      ), */
         ],
       ),
       body: SafeArea(
@@ -83,12 +98,12 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             if (_isTyping) ...[
               const SpinKitThreeBounce(
-                color: Colors.white,
-                size: 18,
+                color: Color.fromARGB(255, 6, 6, 6),
+                size: 30,
               ),
             ],
             const SizedBox(
-              height: 15,
+              height: 40,
             ),
             Material(
               color: cardColor,
@@ -96,31 +111,49 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: TextField(
-                        focusNode: focusNode,
-                        style: const TextStyle(color: Colors.white),
-                        controller: textEditingController,
-                        onSubmitted: (value) async {
-                          await sendMessageFCT(
-                              modelsProvider: modelsProvider,
-                              chatProvider: chatProvider);
-                        },
-                        decoration: const InputDecoration.collapsed(
-                            hintText: "How can I help you",
-                            hintStyle: TextStyle(color: Colors.grey)),
-                      ),
-                    ),
-                    IconButton(
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
                         onPressed: () async {
                           await sendMessageFCT(
-                              modelsProvider: modelsProvider,
-                              chatProvider: chatProvider);
+                            modelsProvider: modelsProvider,
+                            chatProvider: chatProvider,
+                          );
                         },
-                        icon: const Icon(
-                          Icons.send,
+                        icon: const FaIcon(
+                          FontAwesomeIcons.paperPlane,
                           color: Colors.white,
-                        ))
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            focusNode: focusNode,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 30,
+                            ),
+                            controller: textEditingController,
+                            onSubmitted: (value) async {
+                              await sendMessageFCT(
+                                modelsProvider: modelsProvider,
+                                chatProvider: chatProvider,
+                              );
+                            },
+                            decoration: const InputDecoration.collapsed(
+                              hintText: "كيف يمكنني مساعدتك؟",
+                              hintStyle: TextStyle(
+                                  color: Color.fromARGB(255, 97, 97, 97)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -156,8 +189,25 @@ class _ChatScreenState extends State<ChatScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: TextWidget(
-            label: "Please type a message",
+            label: "كيف يمكنني مساعدتك ؟",
           ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Validate that the message contains Arabic keywords related to Python
+    final pythonKeywords = ['بايثون', 'برمجة_بايثون', 'بايثوني', 'بايثونية'];
+    final message = textEditingController.text.toLowerCase();
+    final containsPythonKeyword =
+        pythonKeywords.any((keyword) => message.contains(keyword));
+    if (!containsPythonKeyword) {
+      // Show error message if the message does not contain Arabic Python-related keywords
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              TextWidget(label: "يرجى طرح سؤال متعلق بلغة البرمجة بايثون."),
           backgroundColor: Colors.red,
         ),
       );

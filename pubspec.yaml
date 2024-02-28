@@ -29,8 +29,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+ 
+
   flutter:
     sdk: flutter
+    
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -40,6 +43,10 @@ dependencies:
   http: ^0.13.5
   provider: ^6.0.5
   animated_text_kit: ^4.2.2
+  font_awesome_flutter: ^10.7.0
+  arabic_tools: ^0.0.4
+  nlp: ^0.0.0
+  tokenizer: ^1.0.0
 
 dev_dependencies:
   flutter_test:
